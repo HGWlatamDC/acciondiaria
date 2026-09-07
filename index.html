@@ -3,308 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de Acción Diario - Daniel Currea</title>
+    <title>Plan de Acción CTE 1000 - Daniel Currea</title>
     <style>
         :root {
-            --primary: #1e293b;
-            --accent: #2563eb;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
+            --cte-navy: #0f172a;
+            --cte-gold: #d97706;
+            --cte-blue: #2563eb;
+            --bg-gray: #f8fafc;
+            --border-color: #cbd5e1;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-gray);
+            color: #1e293b;
             margin: 0;
+            padding: 15px;
+            font-size: 12px;
+        }
+
+        .page {
+            max-width: 950px;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            border: 2px solid var(--cte-navy);
             padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--cte-navy);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 4px;
-            font-size: 24px;
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--cte-navy);
         }
 
-        .subtitle {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 24px;
+        .header-badge {
+            background-color: var(--cte-gold);
+            color: #fff;
+            padding: 5px 12px;
+            font-weight: bold;
+            border-radius: 4px;
             font-size: 14px;
         }
 
-        .grid-metas {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            background: #f1f5f9;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-        }
-
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .meta-item label {
-            font-size: 12px;
+        .section-title {
+            background-color: var(--cte-navy);
+            color: #ffffff;
+            padding: 6px 10px;
             font-weight: bold;
-            color: #475569;
+            font-size: 13px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
-        .meta-item input {
-            padding: 6px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 24px;
+            margin-bottom: 10px;
         }
 
         th, td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border);
+            border: 1px solid var(--border-color);
+            padding: 6px;
             text-align: left;
-            font-size: 13px;
         }
 
         th {
-            background-color: #f1f5f9;
-            color: var(--primary);
-            font-weight: 600;
+            background-color: #e2e8f0;
+            color: var(--cte-navy);
+            font-weight: bold;
         }
 
-        tr.completed {
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #94a3b8;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 11px;
+        }
+
+        .checkbox-cell { text-align: center; width: 30px; }
+        
+        tr.done {
             background-color: #f0fdf4;
             text-decoration: line-through;
-            color: #86efac;
-        }
-
-        tr.completed td {
             color: #64748b;
         }
 
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
+        .card-box {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            background: #fff;
+            border-radius: 4px;
         }
 
-        .section-notes {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-        }
-
-        .btn-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: var(--accent);
+        .btn-save {
+            background-color: var(--cte-blue);
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 14px;
-        }
-
-        button:hover {
-            opacity: 0.9;
+            border-radius: 4px;
+            display: block;
+            margin: 20px auto 0 auto;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>PLAN DE ACCIÓN DIARIO</h1>
-    <div class="subtitle">Daniel Currea | Control de Ejecución & Hábitos</div>
+<!-- PÁGINA 1: PLAN SEAMNAL & ESTRATEGIA (Basado en Formato CTE) -->
+<div class="page">
+    <div class="header">
+        <div>
+            <div class="header-title">COMUNIDAD TEAM ELITE 1000</div>
+            <div style="font-size: 12px; color: #64748b;">Plan de Acción Semanal - Daniel Currea</div>
+        </div>
+        <div class="header-badge">MODO FUEGO</div>
+    </div>
 
-    <!-- METAS CUANTITATIVAS -->
-    <div class="grid-metas">
-        <div class="meta-item">
-            <label>Historias (Meta: 3)</label>
-            <input type="text" id="hist" placeholder="Ej: 3/3">
+    <div class="grid-2">
+        <div>
+            <div class="section-title">1 - Metas del Mes</div>
+            <div class="card-box">
+                <label>Volumen (BV por Mes):</label> <input type="text" placeholder="Ej: 1000 BV"><br><br>
+                <label>Nuevos Clientes:</label> <input type="text" placeholder="Ej: 5"><br><br>
+                <label>Nuevos Distribuidores:</label> <input type="text" placeholder="Ej: 3"><br><br>
+                <label>Título Actual / Meta del Mes:</label> <input type="text" placeholder="Ej: Master / Plata">
+            </div>
         </div>
-        <div class="meta-item">
-            <label>Conversaciones (Meta: 10)</label>
-            <input type="text" id="conv" placeholder="Ej: 10/10">
-        </div>
-        <div class="meta-item">
-            <label>Seguimientos (Meta: 3)</label>
-            <input type="text" id="seg" placeholder="Ej: 3/3">
-        </div>
-        <div class="meta-item">
-            <label>Confirmados Zoom</label>
-            <input type="text" id="zoom" placeholder="Ej: 2 personas">
+        <div>
+            <div class="section-title">2 - Metas de la Semana</div>
+            <div class="card-box">
+                <label>Volumen (Ventas/Patrocinio):</label> <input type="text"><br><br>
+                <label>Nuevos Clientes:</label> <input type="text"><br><br>
+                <label>Nuevos Distribuidores:</label> <input type="text"><br><br>
+                <label>Red Social de Enfoque:</label> <input type="text" value="FB Grupos / WhatsApp Business">
+            </div>
         </div>
     </div>
 
-    <!-- TABLA INTERACTIVA -->
+    <div class="section-title">3 - Acciones Semanales (Matriz de Ejecución)</div>
     <table>
         <thead>
             <tr>
-                <th style="width: 40px;">✓</th>
-                <th style="width: 130px;">Horario</th>
-                <th style="width: 180px;">Bloque / Actividad</th>
-                <th>Tarea Específica & Enfoque</th>
+                <th>Acción Clave</th>
+                <th>Lu</th><th>Ma</th><th>Mi</th><th>Ju</th><th>Vi</th><th>Sá</th><th>Do</th>
+                <th>Total</th>
             </tr>
         </thead>
-        <tbody id="agenda-body">
+        <tbody>
             <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>05:00 - 05:40 AM</b></td>
-                <td>Devocional Personal</td>
-                <td>Tiempo de oración y lectura personal.</td>
+                <td><b>ATRAER</b> (Stories / Posts / Grupos)</td>
+                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+                <td><input type="text" style="width:40px;"></td>
             </tr>
             <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>05:40 - 06:25 AM</b></td>
-                <td>Alistamiento & Desayuno</td>
-                <td>Mar/Jue/Sáb: Desayuno Manuel / Apoyo casa.</td>
+                <td><b>CONTACTOS NUEVO</b> (Meta 10 diarios)</td>
+                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+                <td><input type="text" style="width:40px;"></td>
             </tr>
             <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>06:25 - 06:30 AM</b></td>
-                <td>Colegio Manuel</td>
-                <td>Llevar a Manuel a la entrada.</td>
+                <td><b>INVITAR</b> (Zooms / Presentaciones)</td>
+                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+                <td><input type="text" style="width:40px;"></td>
             </tr>
             <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>06:30 - 07:00 AM</b></td>
-                <td>Caminata en Pareja</td>
-                <td>Espacio diario con tu esposa.</td>
+                <td><b>PRESENTAR</b> (1a1 / Grupal / Zooms)</td>
+                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+                <td><input type="text" style="width:40px;"></td>
             </tr>
             <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>07:00 - 08:15 AM</b></td>
-                <td>Ejercicio / Early Work</td>
-                <td>Mar/Jue: Bici Tunal | Lun/Mié/Vie: 5Hilos digital.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>08:15 - 10:00 AM</b></td>
-                <td>Ducha & Desayuno</td>
-                <td>Alistamiento personal y desayuno en casa.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>10:00 - 01:30 PM</b></td>
-                <td><b>5Hilos & Freelance</b></td>
-                <td><b>PRODUCCIÓN:</b> DTF, vinilo, estampado y vectores.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>01:30 - 02:30 PM</b></td>
-                <td>Almuerzo</td>
-                <td>Tiempo de alimentación y descanso.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>02:30 - 04:00 PM</b></td>
-                <td>Redes: Publicaciones</td>
-                <td>2:30 ORYGN | 3:00 MultyHealth | 3:30 HGW</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>04:00 - 05:30 PM</b></td>
-                <td>Redes: Prospectar</td>
-                <td>10 Conversaciones / 3 Seguimientos / Citas Papás</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>05:30 - 07:00 PM</b></td>
-                <td>Invitaciones Zooms</td>
-                <td>Mar 5:00 PM: Hora Acción HGW | Confirmar salas.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>07:00 - 08:00 PM</b></td>
-                <td>Pausa Familiar</td>
-                <td>Descanso y espacio libre en casa.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>08:00 - 09:00 PM</b></td>
-                <td>Zoom Principal</td>
-                <td>Lun/Jue: Multy | Mar: HGW CTE | Mié: Salud</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>09:00 - 10:00 PM</b></td>
-                <td>Zoom Cierre / ORYGN</td>
-                <td>Conexión ORYGN / Cierres 1 a 1 / Registros.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>10:00 - 10:30 PM</b></td>
-                <td>Cierre Operativo</td>
-                <td>Agenda mañana y Estados de WhatsApp.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>10:30 - 11:30 PM</b></td>
-                <td>Local & Loto</td>
-                <td>Acompañar a tu hijo a guardar la loto.</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" onchange="toggleRow(this)"></td>
-                <td><b>11:30 PM +</b></td>
-                <td>Cena & Descanso</td>
-                <td>Cena en casa al regresar y descanso.</td>
+                <td><b>SEGUIMIENTO & CIERRE</b></td>
+                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+                <td><input type="text" style="width:40px;"></td>
             </tr>
         </tbody>
     </table>
+</div>
 
-    <!-- CIERRES Y REFERIDOS -->
-    <div class="section-notes">
-        <h3>Cierres y Referidos del Día</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-            <input type="text" id="firmado" placeholder="¿Se firmó alguien? (Nombre / Red)" style="padding: 8px;">
-            <input type="text" id="objecion" placeholder="Motivo / Objeción si no firmó" style="padding: 8px;">
+<!-- PÁGINA 2: PLANILLA DIARIA INTEGRADA CON RUTINA -->
+<div class="page">
+    <div class="header">
+        <div>
+            <div class="header-title">FORMATO DIARIO DE ACCIÓN (DÍA DE 15)</div>
+            <div style="font-size: 11px;">Fecha: <input type="text" style="width:150px;" placeholder="DD/MM/2026"></div>
         </div>
-        <textarea id="referidos" rows="3" style="width: 100%; padding: 8px; box-sizing: border-box;" placeholder="Escribe aquí los 5 referidos del día (Nombre y Teléfono)..."></textarea>
+        <div class="header-badge">DC PRO</div>
     </div>
 
-    <div class="btn-container">
-        <button onclick="guardarDatos()">Guardar Progreso</button>
+    <!-- RUTINA DIARIA BASE -->
+    <div class="section-title">Bloques de Trabajo & Rutina Integrada</div>
+    <table>
+        <thead>
+            <tr>
+                <th class="checkbox-cell">✓</th>
+                <th style="width: 110px;">Horario</th>
+                <th style="width: 180px;">Actividad / Enfoque</th>
+                <th>Detalle de Ejecución</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:00 - 05:40 AM</td><td>Devocional Personal</td><td>Tiempo de oración y lectura.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:40 - 06:25 AM</td><td>Alistamiento / Desayuno</td><td>Mar/Jue/Sáb: Desayuno Manuel.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>06:25 - 07:00 AM</td><td>Colegio & Caminata</td><td>Colegio Manuel + Caminata en pareja.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>07:00 - 08:15 AM</td><td>Ejercicio / Early Work</td><td>Mar/Jue: Bici Tunal | Lun/Mié/Vie: 5Hilos digital.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>10:00 - 01:30 PM</td><td><b>5Hilos & Freelance</b></td><td>Producción DTF, vinilo, estampado y vectores.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>02:30 - 04:00 PM</td><td>Redes: Publicaciones</td><td>2:30 ORYGN | 3:00 MultyHealth | 3:30 HGW.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>04:00 - 05:30 PM</td><td>Redes: Prospectar</td><td>10 Conversaciones / 3 Seguimientos / Papás.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:30 - 07:00 PM</td><td>Invitaciones Zooms</td><td>Mar 5:00 PM: Hora Acción HGW | Confirmar salas.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>08:00 - 10:00 PM</td><td>Zooms & Cierres</td><td>Conexiones oficiales de negocio según día.</td></tr>
+            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>10:30 - 11:30 PM</td><td>Local & Loto</td><td>Acompañar a hijo en el local a guardar loto.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="grid-2">
+        <!-- SECCIÓN CONVERSACIONES -->
+        <div>
+            <div class="section-title">1. Conversaciones del Día (Meta: 10)</div>
+            <div class="card-box">
+                <input type="text" placeholder="1. Nombre / Canal (IG/WS/FB)"><br><br>
+                <input type="text" placeholder="2. Nombre / Canal"><br><br>
+                <input type="text" placeholder="3. Nombre / Canal"><br><br>
+                <input type="text" placeholder="4. Nombre / Canal"><br><br>
+                <input type="text" placeholder="5. Nombre / Canal"><br><br>
+                <input type="text" placeholder="6. Nombre / Canal"><br><br>
+                <input type="text" placeholder="7. Nombre / Canal"><br><br>
+                <input type="text" placeholder="8. Nombre / Canal"><br><br>
+                <input type="text" placeholder="9. Nombre / Canal"><br><br>
+                <input type="text" placeholder="10. Nombre / Canal">
+            </div>
+
+            <div class="section-title">2. Historias del Día (Meta: 3)</div>
+            <div class="card-box">
+                <input type="checkbox"> Historia 1: Mi Proceso / Estilo de Vida<br>
+                <input type="checkbox"> Historia 2: Agradecimiento / Personal<br>
+                <input type="checkbox"> Historia 3: Producto / Negocio
+            </div>
+        </div>
+
+        <!-- SECCIÓN SEGUIMIENTOS Y RESULTADOS -->
+        <div>
+            <div class="section-title">3. Seguimientos del Día (Meta: 3)</div>
+            <div class="card-box">
+                1. <input type="text" placeholder="Nombre / Cita / Fecha"><br><br>
+                2. <input type="text" placeholder="Nombre / Cita / Fecha"><br><br>
+                3. <input type="text" placeholder="Nombre / Cita / Fecha">
+            </div>
+
+            <div class="section-title">4 & 5. Presentación y Resultado</div>
+            <div class="card-box">
+                <label>Modalidad:</label> 
+                <select><option>Virtual (Zoom)</option><option>1 a 1</option><option>Presencial</option></select><br><br>
+                
+                <input type="checkbox"> <b>SE FIRMÓ:</b><br>
+                • Concretar inscripción / Confirmar Pago<br>
+                • Fecha Inicio Exitoso: <input type="text"><br><br>
+                
+                <input type="checkbox"> <b>NO SE FIRMÓ:</b><br>
+                • Motivo / Objeción: <input type="text">
+            </div>
+
+            <div class="section-title">Sacar Referidos (Mínimo 5)</div>
+            <div class="card-box">
+                1. <input type="text" placeholder="Nombre - Contacto"><br>
+                2. <input type="text" placeholder="Nombre - Contacto"><br>
+                3. <input type="text" placeholder="Nombre - Contacto"><br>
+                4. <input type="text" placeholder="Nombre - Contacto"><br>
+                5. <input type="text" placeholder="Nombre - Contacto">
+            </div>
+        </div>
     </div>
+
+    <button class="btn-save" onclick="alert('¡Planilla diaria guardada correctamente!')">Guardar Progreso Diario</button>
 </div>
 
 <script>
-    function toggleRow(checkbox) {
-        const row = checkbox.closest('tr');
+    function markRow(checkbox) {
+        const tr = checkbox.closest('tr');
         if (checkbox.checked) {
-            row.classList.add('completed');
+            tr.classList.add('done');
         } else {
-            row.classList.remove('completed');
+            tr.classList.remove('done');
         }
-    }
-
-    function guardarDatos() {
-        alert('¡Progreso del día guardado correctamente!');
     }
 </script>
 
