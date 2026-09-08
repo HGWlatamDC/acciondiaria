@@ -1,308 +1,859 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de Acción CTE 1000 - Daniel Currea</title>
-    <style>
-        :root {
-            --cte-navy: #0f172a;
-            --cte-gold: #d97706;
-            --cte-blue: #2563eb;
-            --bg-gray: #f8fafc;
-            --border-color: #cbd5e1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modo Fuego — Panel de acción diaria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #12172b;
+    --bg-soft: #171d38;
+    --card: #1c2344;
+    --card-2: #232b52;
+    --line: #313a68;
+    --text: #edeff7;
+    --text-dim: #9aa3c0;
+    --ember: #ff6a3d;
+    --ember-dim: #ff6a3d33;
+    --gold: #ffb454;
+    --teal: #4fd1c5;
+    --good: #4ade80;
+    --bad: #f87171;
+    --radius: 10px;
+    --radius-pill: 999px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(1200px 600px at 15% -10%, #1c2450 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height:100vh;
+    padding-bottom: 60px;
+  }
+  h1,h2,h3, .display{
+    font-family:'Oswald', sans-serif;
+    letter-spacing:.2px;
+    margin:0;
+  }
+  ::selection{ background: var(--ember-dim); }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--bg-gray);
-            color: #1e293b;
-            margin: 0;
-            padding: 15px;
-            font-size: 12px;
-        }
+  /* ---------- header ---------- */
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 22px 28px 14px;
+    max-width: 1180px; margin: 0 auto;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand h1{ font-size: 26px; font-weight:700; color:var(--text); }
+  .brand h1 span{ color: var(--ember); }
+  .brand .sub{ color: var(--text-dim); font-size: 13px; }
+  .flame{ font-size:22px; }
 
-        .page {
-            max-width: 950px;
-            margin: 0 auto 30px auto;
-            background: #ffffff;
-            border: 2px solid var(--cte-navy);
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+  /* ---------- tabs ---------- */
+  nav.tabs{
+    max-width: 1180px; margin: 0 auto; padding: 0 28px 18px;
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  nav.tabs button{
+    font-family:'Inter', sans-serif;
+    font-size: 14px; font-weight:600;
+    background: var(--card);
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    padding: 9px 18px;
+    cursor:pointer;
+    transition: all .15s ease;
+  }
+  nav.tabs button:hover{ color: var(--text); border-color:#4a5590; }
+  nav.tabs button.active{
+    background: var(--ember);
+    color: #1a0f08;
+    border-color: var(--ember);
+  }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid var(--cte-navy);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
+  main{ max-width: 1180px; margin: 0 auto; padding: 0 28px 40px; }
+  .view{ display:none; animation: fade .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
 
-        .header-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--cte-navy);
-        }
+  .grid{ display:grid; grid-template-columns: 340px 1fr; gap: 20px; align-items:start; }
+  @media (max-width: 880px){ .grid{ grid-template-columns: 1fr; } }
 
-        .header-badge {
-            background-color: var(--cte-gold);
-            color: #fff;
-            padding: 5px 12px;
-            font-weight: bold;
-            border-radius: 4px;
-            font-size: 14px;
-        }
+  .card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+  .card + .card{ margin-top: 18px; }
+  .card h2{ font-size: 18px; font-weight:600; margin-bottom: 4px; }
+  .card .hint{ color:var(--text-dim); font-size:12.5px; margin-bottom:16px; }
 
-        .section-title {
-            background-color: var(--cte-navy);
-            color: #ffffff;
-            padding: 6px 10px;
-            font-weight: bold;
-            font-size: 13px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+  /* ---------- form ---------- */
+  .field{ margin-bottom: 12px; }
+  .field label{ display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:5px; }
+  .field-row{ display:flex; gap:10px; }
+  .field-row .field{ flex:1; }
+  input, select, textarea{
+    width:100%;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family:'Inter', sans-serif;
+    font-size: 14px;
+    border-radius: 7px;
+    padding: 9px 10px;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline: none; border-color: var(--ember);
+  }
+  textarea{ resize: vertical; min-height: 54px; }
+  .meta-tag{ color: var(--gold); font-weight:600; }
+  .kpi-inputs{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  button.primary{
+    width:100%;
+    background: var(--ember); color:#1a0f08;
+    border:none; border-radius:7px;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:14px;
+    padding: 11px; cursor:pointer; margin-top:6px;
+  }
+  button.primary:hover{ filter:brightness(1.08); }
+  button.ghost{
+    background:transparent; color:var(--text-dim); border:1px solid var(--line);
+    border-radius:7px; padding:9px 12px; cursor:pointer; font-family:'Inter',sans-serif; font-size:13px;
+  }
+  button.ghost:hover{ color:var(--text); border-color:#4a5590; }
+  button.link{ background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:13px; padding:4px; }
+  button.link:hover{ color:var(--ember); }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-        }
+  /* ---------- ring ---------- */
+  .ring-wrap{ display:flex; flex-direction:column; align-items:center; padding: 6px 0 4px; }
+  .ring{ position:relative; width:132px; height:132px; }
+  .ring svg{ transform: rotate(-90deg); }
+  .ring .num{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .ring .num b{ font-family:'Oswald',sans-serif; font-size:30px; }
+  .ring .num span{ font-size:11px; color:var(--text-dim); }
 
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 6px;
-            text-align: left;
-        }
+  /* ---------- table ---------- */
+  .table-scroll{ overflow-x:auto; }
+  table{ width:100%; border-collapse: collapse; font-size: 13.5px; }
+  th{
+    text-align:left; color:var(--text-dim); font-weight:600; font-size:12px;
+    padding: 8px 10px; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  td{ padding: 9px 10px; border-bottom:1px solid #232b4d; white-space:nowrap; }
+  tr:hover td{ background: #1f2748; }
+  .badge{
+    display:inline-block; padding:2px 9px; border-radius: var(--radius-pill); font-size:11.5px; font-weight:700;
+  }
+  .badge.good{ background:#173d2c; color:var(--good); }
+  .badge.bad{ background:#3d1a1a; color:var(--bad); }
+  .badge.mid{ background:#3a3413; color:var(--gold); }
+  .row-actions{ display:flex; gap:6px; }
+  .empty{ color:var(--text-dim); text-align:center; padding:30px 0; font-size:13.5px; }
 
-        th {
-            background-color: #e2e8f0;
-            color: var(--cte-navy);
-            font-weight: bold;
-        }
+  /* ---------- selectors bar ---------- */
+  .selectors{ display:flex; gap:14px; align-items:flex-end; margin-bottom:18px; flex-wrap:wrap; }
+  .selectors .field{ margin-bottom:0; width:150px; }
 
-        input[type="text"], select, textarea {
-            width: 100%;
-            padding: 4px;
-            border: 1px solid #94a3b8;
-            border-radius: 3px;
-            box-sizing: border-box;
-            font-size: 11px;
-        }
+  .stat-strip{ display:flex; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
+  .stat{
+    flex:1; min-width:120px;
+    background: var(--card-2); border:1px solid var(--line); border-radius:8px;
+    padding: 12px 14px;
+  }
+  .stat .label{ font-size:11.5px; color:var(--text-dim); }
+  .stat .value{ font-family:'Oswald',sans-serif; font-size:22px; margin-top:2px; }
+  .stat .value.ember{ color:var(--ember); }
 
-        .checkbox-cell { text-align: center; width: 30px; }
-        
-        tr.done {
-            background-color: #f0fdf4;
-            text-decoration: line-through;
-            color: #64748b;
-        }
+  canvas{ max-height: 260px; }
 
-        .card-box {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            background: #fff;
-            border-radius: 4px;
-        }
+  .meta-card{ position:relative; }
+  .meta-card .tag{
+    display:inline-block; background:var(--card-2); color:var(--gold); font-size:11.5px; font-weight:700;
+    padding:2px 10px; border-radius:var(--radius-pill); margin-bottom:8px;
+  }
+  .meta-card h3{ font-size:16px; margin-bottom:2px; }
+  .meta-card .why{ color:var(--text-dim); font-size:13px; margin: 6px 0 10px; }
+  .meta-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap:10px; margin-bottom:10px; }
+  .meta-grid div .k{ font-size:11px; color:var(--text-dim); }
+  .meta-grid div .v{ font-size:14.5px; font-weight:600; }
+  .meta-list{ display:grid; gap:14px; }
 
-        .btn-save {
-            background-color: var(--cte-blue);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            display: block;
-            margin: 20px auto 0 auto;
-        }
-    </style>
+  .toast{
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+    background: var(--card-2); border:1px solid var(--line); color:var(--text);
+    padding:10px 18px; border-radius: var(--radius-pill); font-size:13.5px;
+    opacity:0; pointer-events:none; transition: opacity .2s ease, transform .2s ease;
+    z-index: 50;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+  .loading{ color:var(--text-dim); font-size:13.5px; padding: 30px 0; text-align:center; }
+</style>
 </head>
 <body>
 
-<!-- PÁGINA 1: PLAN SEAMNAL & ESTRATEGIA (Basado en Formato CTE) -->
-<div class="page">
-    <div class="header">
-        <div>
-            <div class="header-title">COMUNIDAD TEAM ELITE 1000</div>
-            <div style="font-size: 12px; color: #64748b;">Plan de Acción Semanal - Daniel Currea</div>
+<header class="topbar">
+  <div class="brand">
+    <span class="flame">🔥</span>
+    <h1>Modo <span>Fuego</span></h1>
+    <span class="sub">— panel de acción diaria</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-view="registro" class="active">Registro diario</button>
+  <button data-view="semanal">Resumen semanal</button>
+  <button data-view="anual">Resumen anual</button>
+  <button data-view="metas">Metas mensuales</button>
+</nav>
+
+<main>
+
+  <!-- ============ REGISTRO DIARIO ============ -->
+  <section class="view active" id="view-registro">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2 id="form-title">Registrar el día</h2>
+          <div class="hint">Metas: <span class="meta-tag">10</span> conversaciones · <span class="meta-tag">3</span> historias · <span class="meta-tag">3</span> seguimientos · <span class="meta-tag">1</span> presentación · <span class="meta-tag">5</span> referidos</div>
+          <form id="form-registro">
+            <div class="field">
+              <label for="f-fecha">Fecha</label>
+              <input type="date" id="f-fecha" required>
+            </div>
+            <div class="kpi-inputs">
+              <div class="field"><label>Conversaciones</label><input type="number" min="0" id="f-conv" value="0"></div>
+              <div class="field"><label>Historias</label><input type="number" min="0" id="f-hist" value="0"></div>
+              <div class="field"><label>Seguimientos</label><input type="number" min="0" id="f-seg" value="0"></div>
+              <div class="field"><label>Presentaciones</label><input type="number" min="0" id="f-pres" value="0"></div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Tipo de presentación</label>
+                <select id="f-tipo">
+                  <option value="">—</option>
+                  <option>1 a 1</option>
+                  <option>2 a 1</option>
+                  <option>Grupo</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Modalidad</label>
+                <select id="f-modalidad">
+                  <option value="">—</option>
+                  <option>Virtual</option>
+                  <option>Presencial</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>¿Firmó?</label>
+                <select id="f-firmo">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field"><label>Referidos obtenidos</label><input type="number" min="0" id="f-ref" value="0"></div>
+            </div>
+            <div class="field" id="wrap-motivo" style="display:none;">
+              <label>Motivo si no firmó</label>
+              <input type="text" id="f-motivo" placeholder="¿Qué pasó? ¿Qué mejorar?">
+            </div>
+            <div class="field"><label>Ingresos generados</label><input type="number" min="0" id="f-ingresos" value="0"></div>
+            <div class="field"><label>Notas</label><textarea id="f-notas" placeholder="Opcional"></textarea></div>
+            <button type="submit" class="primary" id="btn-guardar">Guardar día</button>
+            <button type="button" class="ghost" id="btn-cancelar" style="display:none; width:100%; margin-top:8px;">Cancelar edición</button>
+          </form>
         </div>
-        <div class="header-badge">MODO FUEGO</div>
+
+        <div class="card">
+          <h2 style="font-size:15px;">Cumplimiento de hoy</h2>
+          <div class="ring-wrap">
+            <div class="ring">
+              <svg width="132" height="132" viewBox="0 0 132 132">
+                <circle cx="66" cy="66" r="56" stroke="#2a3260" stroke-width="12" fill="none"/>
+                <circle id="ring-fg" cx="66" cy="66" r="56" stroke="#ff6a3d" stroke-width="12" fill="none"
+                  stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"/>
+              </svg>
+              <div class="num"><b id="ring-pct">0%</b><span>meta del día</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Historial</h2>
+          <div class="hint">Todo lo que registras queda guardado aquí, ordenado por fecha.</div>
+          <div class="table-scroll">
+            <table id="tabla-registro">
+              <thead>
+                <tr>
+                  <th>Fecha</th><th>Día</th><th>Conv.</th><th>Hist.</th><th>Seg.</th><th>Pres.</th>
+                  <th>Firmó</th><th>Ref.</th><th>Ingresos</th><th>Cumpl.</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="tbody-registro"></tbody>
+            </table>
+            <div class="empty" id="empty-registro" style="display:none;">Aún no has registrado ningún día. Llena el formulario para empezar.</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="grid-2">
-        <div>
-            <div class="section-title">1 - Metas del Mes</div>
-            <div class="card-box">
-                <label>Volumen (BV por Mes):</label> <input type="text" placeholder="Ej: 1000 BV"><br><br>
-                <label>Nuevos Clientes:</label> <input type="text" placeholder="Ej: 5"><br><br>
-                <label>Nuevos Distribuidores:</label> <input type="text" placeholder="Ej: 3"><br><br>
-                <label>Título Actual / Meta del Mes:</label> <input type="text" placeholder="Ej: Master / Plata">
-            </div>
-        </div>
-        <div>
-            <div class="section-title">2 - Metas de la Semana</div>
-            <div class="card-box">
-                <label>Volumen (Ventas/Patrocinio):</label> <input type="text"><br><br>
-                <label>Nuevos Clientes:</label> <input type="text"><br><br>
-                <label>Nuevos Distribuidores:</label> <input type="text"><br><br>
-                <label>Red Social de Enfoque:</label> <input type="text" value="FB Grupos / WhatsApp Business">
-            </div>
-        </div>
+  <!-- ============ RESUMEN SEMANAL ============ -->
+  <section class="view" id="view-semanal">
+    <div class="card">
+      <h2>Resumen semanal</h2>
+      <div class="hint">Compara tus semanas dentro del mes elegido.</div>
+      <div class="selectors">
+        <div class="field"><label>Año</label><select id="sem-anio"></select></div>
+        <div class="field"><label>Mes</label><select id="sem-mes"></select></div>
+      </div>
+      <div class="table-scroll">
+        <table id="tabla-semanal">
+          <thead>
+            <tr><th>Semana</th><th>Días</th><th>Conv. real</th><th>Conv. meta</th><th>% cumpl.</th>
+                <th>Historias</th><th>Seg.</th><th>Pres.</th><th>Firmadas</th><th>Referidos</th><th>Ingresos</th></tr>
+          </thead>
+          <tbody id="tbody-semanal"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:22px;"><canvas id="chart-semanal"></canvas></div>
     </div>
+  </section>
 
-    <div class="section-title">3 - Acciones Semanales (Matriz de Ejecución)</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Acción Clave</th>
-                <th>Lu</th><th>Ma</th><th>Mi</th><th>Ju</th><th>Vi</th><th>Sá</th><th>Do</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><b>ATRAER</b> (Stories / Posts / Grupos)</td>
-                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-                <td><input type="text" style="width:40px;"></td>
-            </tr>
-            <tr>
-                <td><b>CONTACTOS NUEVO</b> (Meta 10 diarios)</td>
-                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-                <td><input type="text" style="width:40px;"></td>
-            </tr>
-            <tr>
-                <td><b>INVITAR</b> (Zooms / Presentaciones)</td>
-                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-                <td><input type="text" style="width:40px;"></td>
-            </tr>
-            <tr>
-                <td><b>PRESENTAR</b> (1a1 / Grupal / Zooms)</td>
-                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-                <td><input type="text" style="width:40px;"></td>
-            </tr>
-            <tr>
-                <td><b>SEGUIMIENTO & CIERRE</b></td>
-                <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-                <td><input type="text" style="width:40px;"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- PÁGINA 2: PLANILLA DIARIA INTEGRADA CON RUTINA -->
-<div class="page">
-    <div class="header">
-        <div>
-            <div class="header-title">FORMATO DIARIO DE ACCIÓN (DÍA DE 15)</div>
-            <div style="font-size: 11px;">Fecha: <input type="text" style="width:150px;" placeholder="DD/MM/2026"></div>
-        </div>
-        <div class="header-badge">DC PRO</div>
+  <!-- ============ RESUMEN ANUAL ============ -->
+  <section class="view" id="view-anual">
+    <div class="card">
+      <h2>Resumen anual</h2>
+      <div class="hint">Compara los 12 meses de un año entre sí.</div>
+      <div class="selectors">
+        <div class="field"><label>Año</label><select id="an-anio"></select></div>
+      </div>
+      <div class="stat-strip" id="stat-anual"></div>
+      <div class="table-scroll">
+        <table id="tabla-anual">
+          <thead>
+            <tr><th>Mes</th><th>Días</th><th>Conv.</th><th>Historias</th><th>Seg.</th><th>Pres.</th>
+                <th>Firmadas</th><th>Referidos</th><th>Ingresos</th><th>% cumpl.</th></tr>
+          </thead>
+          <tbody id="tbody-anual"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:22px;"><canvas id="chart-anual"></canvas></div>
     </div>
+  </section>
 
-    <!-- RUTINA DIARIA BASE -->
-    <div class="section-title">Bloques de Trabajo & Rutina Integrada</div>
-    <table>
-        <thead>
-            <tr>
-                <th class="checkbox-cell">✓</th>
-                <th style="width: 110px;">Horario</th>
-                <th style="width: 180px;">Actividad / Enfoque</th>
-                <th>Detalle de Ejecución</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:00 - 05:40 AM</td><td>Devocional Personal</td><td>Tiempo de oración y lectura.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:40 - 06:25 AM</td><td>Alistamiento / Desayuno</td><td>Mar/Jue/Sáb: Desayuno Manuel.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>06:25 - 07:00 AM</td><td>Colegio & Caminata</td><td>Colegio Manuel + Caminata en pareja.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>07:00 - 08:15 AM</td><td>Ejercicio / Early Work</td><td>Mar/Jue: Bici Tunal | Lun/Mié/Vie: 5Hilos digital.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>10:00 - 01:30 PM</td><td><b>5Hilos & Freelance</b></td><td>Producción DTF, vinilo, estampado y vectores.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>02:30 - 04:00 PM</td><td>Redes: Publicaciones</td><td>2:30 ORYGN | 3:00 MultyHealth | 3:30 HGW.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>04:00 - 05:30 PM</td><td>Redes: Prospectar</td><td>10 Conversaciones / 3 Seguimientos / Papás.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>05:30 - 07:00 PM</td><td>Invitaciones Zooms</td><td>Mar 5:00 PM: Hora Acción HGW | Confirmar salas.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>08:00 - 10:00 PM</td><td>Zooms & Cierres</td><td>Conexiones oficiales de negocio según día.</td></tr>
-            <tr><td><input type="checkbox" onchange="markRow(this)"></td><td>10:30 - 11:30 PM</td><td>Local & Loto</td><td>Acompañar a hijo en el local a guardar loto.</td></tr>
-        </tbody>
-    </table>
-
-    <div class="grid-2">
-        <!-- SECCIÓN CONVERSACIONES -->
-        <div>
-            <div class="section-title">1. Conversaciones del Día (Meta: 10)</div>
-            <div class="card-box">
-                <input type="text" placeholder="1. Nombre / Canal (IG/WS/FB)"><br><br>
-                <input type="text" placeholder="2. Nombre / Canal"><br><br>
-                <input type="text" placeholder="3. Nombre / Canal"><br><br>
-                <input type="text" placeholder="4. Nombre / Canal"><br><br>
-                <input type="text" placeholder="5. Nombre / Canal"><br><br>
-                <input type="text" placeholder="6. Nombre / Canal"><br><br>
-                <input type="text" placeholder="7. Nombre / Canal"><br><br>
-                <input type="text" placeholder="8. Nombre / Canal"><br><br>
-                <input type="text" placeholder="9. Nombre / Canal"><br><br>
-                <input type="text" placeholder="10. Nombre / Canal">
+  <!-- ============ METAS MENSUALES ============ -->
+  <section class="view" id="view-metas">
+    <div class="grid">
+      <div class="card">
+        <h2 id="meta-form-title">Metas del mes</h2>
+        <div class="hint">Escríbelas una vez al mes: guían tu estrategia y tus acciones clave.</div>
+        <form id="form-metas">
+          <div class="field-row">
+            <div class="field"><label>Año</label><input type="number" id="m-anio" value="2026"></div>
+            <div class="field">
+              <label>Mes</label>
+              <select id="m-mes">
+                <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
+                <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
+                <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+              </select>
             </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Título actual</label><input type="text" id="m-titulo-actual"></div>
+            <div class="field"><label>Título meta del mes</label><input type="text" id="m-titulo-meta"></div>
+          </div>
+          <div class="field"><label>¿Por qué?</label><textarea id="m-porque"></textarea></div>
+          <div class="field"><label>Tiempo a invertir semanalmente</label><input type="text" id="m-tiempo" placeholder="Ej: 10 horas"></div>
+          <div class="kpi-inputs">
+            <div class="field"><label>Volumen meta (BV/mes)</label><input type="number" id="m-volumen"></div>
+            <div class="field"><label>Nuevos clientes meta</label><input type="number" id="m-clientes"></div>
+            <div class="field"><label>Nuevos distribuidores meta</label><input type="number" id="m-distribuidores"></div>
+            <div class="field"><label>Otros objetivos</label><input type="text" id="m-otros"></div>
+          </div>
+          <div class="field"><label>Flujo de contactos (estrategia)</label><input type="text" id="m-flujo"></div>
+          <div class="field-row">
+            <div class="field"><label>Canal de ventas</label><input type="text" id="m-canal"></div>
+            <div class="field"><label>Red social de enfoque</label><input type="text" id="m-red"></div>
+          </div>
+          <div class="field"><label>Acciones clave del mes</label><textarea id="m-acciones"></textarea></div>
+          <button type="submit" class="primary">Guardar metas del mes</button>
+          <button type="button" class="ghost" id="btn-cancelar-meta" style="display:none; width:100%; margin-top:8px;">Cancelar edición</button>
+        </form>
+      </div>
 
-            <div class="section-title">2. Historias del Día (Meta: 3)</div>
-            <div class="card-box">
-                <input type="checkbox"> Historia 1: Mi Proceso / Estilo de Vida<br>
-                <input type="checkbox"> Historia 2: Agradecimiento / Personal<br>
-                <input type="checkbox"> Historia 3: Producto / Negocio
-            </div>
+      <div>
+        <div class="card">
+          <h2>Meses guardados</h2>
+          <div class="meta-list" id="lista-metas"></div>
+          <div class="empty" id="empty-metas" style="display:none;">Aún no has guardado metas de ningún mes.</div>
         </div>
-
-        <!-- SECCIÓN SEGUIMIENTOS Y RESULTADOS -->
-        <div>
-            <div class="section-title">3. Seguimientos del Día (Meta: 3)</div>
-            <div class="card-box">
-                1. <input type="text" placeholder="Nombre / Cita / Fecha"><br><br>
-                2. <input type="text" placeholder="Nombre / Cita / Fecha"><br><br>
-                3. <input type="text" placeholder="Nombre / Cita / Fecha">
-            </div>
-
-            <div class="section-title">4 & 5. Presentación y Resultado</div>
-            <div class="card-box">
-                <label>Modalidad:</label> 
-                <select><option>Virtual (Zoom)</option><option>1 a 1</option><option>Presencial</option></select><br><br>
-                
-                <input type="checkbox"> <b>SE FIRMÓ:</b><br>
-                • Concretar inscripción / Confirmar Pago<br>
-                • Fecha Inicio Exitoso: <input type="text"><br><br>
-                
-                <input type="checkbox"> <b>NO SE FIRMÓ:</b><br>
-                • Motivo / Objeción: <input type="text">
-            </div>
-
-            <div class="section-title">Sacar Referidos (Mínimo 5)</div>
-            <div class="card-box">
-                1. <input type="text" placeholder="Nombre - Contacto"><br>
-                2. <input type="text" placeholder="Nombre - Contacto"><br>
-                3. <input type="text" placeholder="Nombre - Contacto"><br>
-                4. <input type="text" placeholder="Nombre - Contacto"><br>
-                5. <input type="text" placeholder="Nombre - Contacto">
-            </div>
-        </div>
+      </div>
     </div>
+  </section>
 
-    <button class="btn-save" onclick="alert('¡Planilla diaria guardada correctamente!')">Guardar Progreso Diario</button>
-</div>
+</main>
+
+<div class="toast" id="toast"></div>
 
 <script>
-    function markRow(checkbox) {
-        const tr = checkbox.closest('tr');
-        if (checkbox.checked) {
-            tr.classList.add('done');
-        } else {
-            tr.classList.remove('done');
-        }
-    }
-</script>
+const METAS_DIARIAS = { conv:10, hist:3, seg:3, pres:1, ref:5 };
+const NOMBRES_MES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const NOMBRES_DIA = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
+let registros = [];
+let metasMensuales = [];
+let editingRegistroId = null;
+let editingMetaId = null;
+let chartSemanal = null;
+let chartAnual = null;
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 1800);
+}
+
+// ---------- almacenamiento persistente ----------
+async function loadAll(){
+  try{
+    const r = await window.storage.get('registros_diarios', false);
+    registros = r ? JSON.parse(r.value) : [];
+  }catch(e){ registros = []; }
+  try{
+    const m = await window.storage.get('metas_mensuales', false);
+    metasMensuales = m ? JSON.parse(m.value) : [];
+  }catch(e){ metasMensuales = []; }
+}
+async function saveRegistros(){
+  try{
+    const res = await window.storage.set('registros_diarios', JSON.stringify(registros), false);
+    if(!res) showToast('No se pudo guardar. Intenta de nuevo.');
+  }catch(e){ showToast('Error guardando el registro.'); }
+}
+async function saveMetas(){
+  try{
+    const res = await window.storage.set('metas_mensuales', JSON.stringify(metasMensuales), false);
+    if(!res) showToast('No se pudo guardar. Intenta de nuevo.');
+  }catch(e){ showToast('Error guardando las metas.'); }
+}
+
+// ---------- helpers de fecha ----------
+function parseFecha(f){ const [y,m,d] = f.split('-').map(Number); return new Date(y, m-1, d); }
+function semanaDelMes(f){ const d = parseFecha(f); return Math.floor((d.getDate()-1)/7)+1; }
+function anioDe(f){ return parseFecha(f).getFullYear(); }
+function mesDe(f){ return parseFecha(f).getMonth()+1; }
+function nombreDia(f){ return NOMBRES_DIA[parseFecha(f).getDay()]; }
+function fmtFecha(f){ const d = parseFecha(f); return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+
+function cumplimiento(reg){
+  const c = Math.min(reg.conv/METAS_DIARIAS.conv,1);
+  const h = Math.min(reg.hist/METAS_DIARIAS.hist,1);
+  const s = Math.min(reg.seg/METAS_DIARIAS.seg,1);
+  const p = Math.min(reg.pres/METAS_DIARIAS.pres,1);
+  const r = Math.min(reg.ref/METAS_DIARIAS.ref,1);
+  return (c+h+s+p+r)/5;
+}
+function badgeClass(pct){
+  if(pct >= 1) return 'good';
+  if(pct >= 0.6) return 'mid';
+  return 'bad';
+}
+
+// ============ VISTA: REGISTRO DIARIO ============
+function updateRing(){
+  const reg = {
+    conv:+document.getElementById('f-conv').value||0,
+    hist:+document.getElementById('f-hist').value||0,
+    seg:+document.getElementById('f-seg').value||0,
+    pres:+document.getElementById('f-pres').value||0,
+    ref:+document.getElementById('f-ref').value||0,
+  };
+  const pct = cumplimiento(reg);
+  const circumference = 352;
+  const offset = circumference - pct*circumference;
+  const ring = document.getElementById('ring-fg');
+  ring.setAttribute('stroke-dashoffset', offset);
+  ring.setAttribute('stroke', pct>=1 ? '#4ade80' : pct>=0.6 ? '#ffb454' : '#ff6a3d');
+  document.getElementById('ring-pct').textContent = Math.round(pct*100)+'%';
+}
+
+function renderRegistro(){
+  const tbody = document.getElementById('tbody-registro');
+  tbody.innerHTML = '';
+  const ordenados = [...registros].sort((a,b)=> b.fecha.localeCompare(a.fecha));
+  document.getElementById('empty-registro').style.display = ordenados.length ? 'none' : 'block';
+  for(const reg of ordenados){
+    const pct = cumplimiento(reg);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fmtFecha(reg.fecha)}</td>
+      <td>${nombreDia(reg.fecha)}</td>
+      <td>${reg.conv}</td><td>${reg.hist}</td><td>${reg.seg}</td><td>${reg.pres}</td>
+      <td>${reg.firmo==='si'?'Sí':reg.firmo==='no'?'No':'—'}</td>
+      <td>${reg.ref}</td>
+      <td>${reg.ingresos ? Number(reg.ingresos).toLocaleString('es-CO') : '—'}</td>
+      <td><span class="badge ${badgeClass(pct)}">${Math.round(pct*100)}%</span></td>
+      <td class="row-actions">
+        <button class="link" data-edit="${reg.id}">Editar</button>
+        <button class="link" data-del="${reg.id}">Borrar</button>
+      </td>`;
+    tbody.appendChild(tr);
+  }
+  tbody.querySelectorAll('[data-edit]').forEach(b=> b.onclick = ()=> editRegistro(b.dataset.edit));
+  tbody.querySelectorAll('[data-del]').forEach(b=> b.onclick = ()=> deleteRegistro(b.dataset.del));
+}
+
+function editRegistro(id){
+  const reg = registros.find(r=>r.id===id);
+  if(!reg) return;
+  editingRegistroId = id;
+  document.getElementById('f-fecha').value = reg.fecha;
+  document.getElementById('f-conv').value = reg.conv;
+  document.getElementById('f-hist').value = reg.hist;
+  document.getElementById('f-seg').value = reg.seg;
+  document.getElementById('f-pres').value = reg.pres;
+  document.getElementById('f-tipo').value = reg.tipo || '';
+  document.getElementById('f-modalidad').value = reg.modalidad || '';
+  document.getElementById('f-firmo').value = reg.firmo || '';
+  document.getElementById('f-ref').value = reg.ref;
+  document.getElementById('f-motivo').value = reg.motivo || '';
+  document.getElementById('f-ingresos').value = reg.ingresos || 0;
+  document.getElementById('f-notas').value = reg.notas || '';
+  document.getElementById('form-title').textContent = 'Editando el ' + fmtFecha(reg.fecha);
+  document.getElementById('btn-guardar').textContent = 'Guardar cambios';
+  document.getElementById('btn-cancelar').style.display = 'block';
+  toggleMotivo();
+  updateRing();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function resetFormRegistro(){
+  editingRegistroId = null;
+  document.getElementById('form-registro').reset();
+  document.getElementById('f-fecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('form-title').textContent = 'Registrar el día';
+  document.getElementById('btn-guardar').textContent = 'Guardar día';
+  document.getElementById('btn-cancelar').style.display = 'none';
+  toggleMotivo();
+  updateRing();
+}
+
+async function deleteRegistro(id){
+  registros = registros.filter(r=>r.id!==id);
+  await saveRegistros();
+  renderRegistro();
+  refreshSelectors();
+  showToast('Día eliminado.');
+}
+
+function toggleMotivo(){
+  document.getElementById('wrap-motivo').style.display =
+    document.getElementById('f-firmo').value === 'no' ? 'block' : 'none';
+}
+
+document.getElementById('f-firmo').addEventListener('change', toggleMotivo);
+['f-conv','f-hist','f-seg','f-pres','f-ref'].forEach(id=>
+  document.getElementById(id).addEventListener('input', updateRing));
+
+document.getElementById('form-registro').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fecha = document.getElementById('f-fecha').value;
+  if(!fecha){ showToast('Elige una fecha.'); return; }
+  const reg = {
+    id: editingRegistroId || uid(),
+    fecha,
+    conv: +document.getElementById('f-conv').value||0,
+    hist: +document.getElementById('f-hist').value||0,
+    seg: +document.getElementById('f-seg').value||0,
+    pres: +document.getElementById('f-pres').value||0,
+    tipo: document.getElementById('f-tipo').value,
+    modalidad: document.getElementById('f-modalidad').value,
+    firmo: document.getElementById('f-firmo').value,
+    ref: +document.getElementById('f-ref').value||0,
+    motivo: document.getElementById('f-motivo').value,
+    ingresos: +document.getElementById('f-ingresos').value||0,
+    notas: document.getElementById('f-notas').value,
+  };
+  if(editingRegistroId){
+    const idx = registros.findIndex(r=>r.id===editingRegistroId);
+    registros[idx] = reg;
+  } else {
+    const existing = registros.findIndex(r=>r.fecha===fecha);
+    if(existing>=0){ registros[existing] = reg; } else { registros.push(reg); }
+  }
+  await saveRegistros();
+  renderRegistro();
+  refreshSelectors();
+  resetFormRegistro();
+  showToast('Día guardado.');
+});
+document.getElementById('btn-cancelar').addEventListener('click', resetFormRegistro);
+
+// ============ VISTA: RESUMEN SEMANAL ============
+function refreshSelectors(){
+  const anios = [...new Set(registros.map(r=>anioDe(r.fecha)))].sort();
+  const anioActual = new Date().getFullYear();
+  if(!anios.includes(anioActual)) anios.push(anioActual);
+  anios.sort();
+
+  const selAnioSem = document.getElementById('sem-anio');
+  const prevSem = selAnioSem.value;
+  selAnioSem.innerHTML = anios.map(a=>`<option value="${a}">${a}</option>`).join('');
+  selAnioSem.value = prevSem && anios.includes(+prevSem) ? prevSem : anioActual;
+
+  const selMesSem = document.getElementById('sem-mes');
+  if(!selMesSem.options.length){
+    selMesSem.innerHTML = NOMBRES_MES.map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');
+    selMesSem.value = new Date().getMonth()+1;
+  }
+
+  const selAnioAn = document.getElementById('an-anio');
+  const prevAn = selAnioAn.value;
+  selAnioAn.innerHTML = anios.map(a=>`<option value="${a}">${a}</option>`).join('');
+  selAnioAn.value = prevAn && anios.includes(+prevAn) ? prevAn : anioActual;
+}
+
+function agregarPor(filtroFn){
+  const filtrados = registros.filter(filtroFn);
+  const sum = (key)=> filtrados.reduce((s,r)=> s + (Number(r[key])||0), 0);
+  const firmadas = filtrados.filter(r=>r.firmo==='si').length;
+  return {
+    dias: filtrados.length,
+    conv: sum('conv'), hist: sum('hist'), seg: sum('seg'), pres: sum('pres'),
+    firmadas, ref: sum('ref'), ingresos: sum('ingresos'),
+  };
+}
+
+function renderSemanal(){
+  const anio = +document.getElementById('sem-anio').value;
+  const mes = +document.getElementById('sem-mes').value;
+  const tbody = document.getElementById('tbody-semanal');
+  tbody.innerHTML = '';
+  const pcts = [];
+  for(let s=1; s<=5; s++){
+    const stats = agregarPor(r=> anioDe(r.fecha)===anio && mesDe(r.fecha)===mes && semanaDelMes(r.fecha)===s);
+    const metaConv = stats.dias * METAS_DIARIAS.conv;
+    const pct = metaConv ? stats.conv/metaConv : null;
+    pcts.push(pct===null ? 0 : pct);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Semana ${s}</td><td>${stats.dias}</td><td>${stats.conv}</td><td>${metaConv}</td>
+      <td>${pct===null?'—':`<span class="badge ${badgeClass(pct)}">${Math.round(pct*100)}%</span>`}</td>
+      <td>${stats.hist}</td><td>${stats.seg}</td><td>${stats.pres}</td>
+      <td>${stats.firmadas}</td><td>${stats.ref}</td>
+      <td>${stats.ingresos ? stats.ingresos.toLocaleString('es-CO') : '—'}</td>`;
+    tbody.appendChild(tr);
+  }
+
+  const ctx = document.getElementById('chart-semanal');
+  if(chartSemanal) chartSemanal.destroy();
+  chartSemanal = new Chart(ctx, {
+    type:'bar',
+    data:{ labels:['Semana 1','Semana 2','Semana 3','Semana 4','Semana 5'],
+      datasets:[{ label:'% cumplimiento de conversaciones', data: pcts.map(p=>Math.round(p*100)),
+        backgroundColor: pcts.map(p=> p>=1 ? '#4ade80' : p>=0.6 ? '#ffb454' : '#ff6a3d'),
+        borderRadius:5 }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } },
+      scales:{ y:{ beginAtZero:true, max:120, ticks:{ color:'#9aa3c0', callback:v=>v+'%' }, grid:{ color:'#232b52' } },
+               x:{ ticks:{ color:'#9aa3c0' }, grid:{ display:false } } } }
+  });
+}
+
+// ============ VISTA: RESUMEN ANUAL ============
+function renderAnual(){
+  const anio = +document.getElementById('an-anio').value;
+  const tbody = document.getElementById('tbody-anual');
+  tbody.innerHTML = '';
+  const pcts = [];
+  let totales = {dias:0,conv:0,hist:0,seg:0,pres:0,firmadas:0,ref:0,ingresos:0};
+  for(let m=1; m<=12; m++){
+    const stats = agregarPor(r=> anioDe(r.fecha)===anio && mesDe(r.fecha)===m);
+    Object.keys(totales).forEach(k=> totales[k]+=stats[k]);
+    const metaConv = stats.dias * METAS_DIARIAS.conv;
+    const pct = metaConv ? stats.conv/metaConv : null;
+    pcts.push(pct===null?0:pct);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${NOMBRES_MES[m-1]}</td><td>${stats.dias}</td><td>${stats.conv}</td><td>${stats.hist}</td>
+      <td>${stats.seg}</td><td>${stats.pres}</td><td>${stats.firmadas}</td><td>${stats.ref}</td>
+      <td>${stats.ingresos ? stats.ingresos.toLocaleString('es-CO') : '—'}</td>
+      <td>${pct===null?'—':`<span class="badge ${badgeClass(pct)}">${Math.round(pct*100)}%</span>`}</td>`;
+    tbody.appendChild(tr);
+  }
+
+  const stripe = document.getElementById('stat-anual');
+  const metaConvAnual = totales.dias*METAS_DIARIAS.conv;
+  const pctAnual = metaConvAnual ? Math.round((totales.conv/metaConvAnual)*100) : 0;
+  stripe.innerHTML = `
+    <div class="stat"><div class="label">Días registrados</div><div class="value">${totales.dias}</div></div>
+    <div class="stat"><div class="label">Conversaciones</div><div class="value">${totales.conv}</div></div>
+    <div class="stat"><div class="label">Presentaciones firmadas</div><div class="value">${totales.firmadas}</div></div>
+    <div class="stat"><div class="label">Ingresos generados</div><div class="value">${totales.ingresos.toLocaleString('es-CO')}</div></div>
+    <div class="stat"><div class="label">Cumplimiento del año</div><div class="value ember">${pctAnual}%</div></div>
+  `;
+
+  const ctx = document.getElementById('chart-anual');
+  if(chartAnual) chartAnual.destroy();
+  chartAnual = new Chart(ctx, {
+    type:'bar',
+    data:{ labels: NOMBRES_MES,
+      datasets:[{ label:'% cumplimiento de conversaciones', data: pcts.map(p=>Math.round(p*100)),
+        backgroundColor: pcts.map(p=> p>=1 ? '#4ade80' : p>=0.6 ? '#ffb454' : '#ff6a3d'),
+        borderRadius:5 }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } },
+      scales:{ y:{ beginAtZero:true, max:120, ticks:{ color:'#9aa3c0', callback:v=>v+'%' }, grid:{ color:'#232b52' } },
+               x:{ ticks:{ color:'#9aa3c0' }, grid:{ display:false } } } }
+  });
+}
+
+document.getElementById('sem-anio').addEventListener('change', renderSemanal);
+document.getElementById('sem-mes').addEventListener('change', renderSemanal);
+document.getElementById('an-anio').addEventListener('change', renderAnual);
+
+// ============ VISTA: METAS MENSUALES ============
+function renderMetas(){
+  const lista = document.getElementById('lista-metas');
+  lista.innerHTML = '';
+  const ordenadas = [...metasMensuales].sort((a,b)=> (b.anio-a.anio) || (NOMBRES_MES.indexOf(b.mes)-NOMBRES_MES.indexOf(a.mes)));
+  document.getElementById('empty-metas').style.display = ordenadas.length ? 'none' : 'block';
+  for(const meta of ordenadas){
+    const div = document.createElement('div');
+    div.className = 'card meta-card';
+    div.innerHTML = `
+      <span class="tag">${meta.mes} ${meta.anio}</span>
+      <h3>${meta.tituloActual || '—'} → ${meta.tituloMeta || '—'}</h3>
+      <div class="why">${meta.porque || ''}</div>
+      <div class="meta-grid">
+        <div><div class="k">Volumen meta</div><div class="v">${meta.volumen||'—'}</div></div>
+        <div><div class="k">Clientes meta</div><div class="v">${meta.clientes||'—'}</div></div>
+        <div><div class="k">Distribuidores meta</div><div class="v">${meta.distribuidores||'—'}</div></div>
+        <div><div class="k">Tiempo/semana</div><div class="v">${meta.tiempo||'—'}</div></div>
+      </div>
+      <div class="row-actions">
+        <button class="link" data-edit-meta="${meta.id}">Editar</button>
+        <button class="link" data-del-meta="${meta.id}">Borrar</button>
+      </div>`;
+    lista.appendChild(div);
+  }
+  lista.querySelectorAll('[data-edit-meta]').forEach(b=> b.onclick = ()=> editMeta(b.dataset.editMeta));
+  lista.querySelectorAll('[data-del-meta]').forEach(b=> b.onclick = ()=> deleteMeta(b.dataset.delMeta));
+}
+
+function editMeta(id){
+  const meta = metasMensuales.find(m=>m.id===id);
+  if(!meta) return;
+  editingMetaId = id;
+  document.getElementById('m-anio').value = meta.anio;
+  document.getElementById('m-mes').value = meta.mes;
+  document.getElementById('m-titulo-actual').value = meta.tituloActual||'';
+  document.getElementById('m-titulo-meta').value = meta.tituloMeta||'';
+  document.getElementById('m-porque').value = meta.porque||'';
+  document.getElementById('m-tiempo').value = meta.tiempo||'';
+  document.getElementById('m-volumen').value = meta.volumen||'';
+  document.getElementById('m-clientes').value = meta.clientes||'';
+  document.getElementById('m-distribuidores').value = meta.distribuidores||'';
+  document.getElementById('m-otros').value = meta.otros||'';
+  document.getElementById('m-flujo').value = meta.flujo||'';
+  document.getElementById('m-canal').value = meta.canal||'';
+  document.getElementById('m-red').value = meta.red||'';
+  document.getElementById('m-acciones').value = meta.acciones||'';
+  document.getElementById('meta-form-title').textContent = 'Editando ' + meta.mes + ' ' + meta.anio;
+  document.getElementById('btn-cancelar-meta').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function resetFormMetas(){
+  editingMetaId = null;
+  document.getElementById('form-metas').reset();
+  document.getElementById('m-anio').value = new Date().getFullYear();
+  document.getElementById('meta-form-title').textContent = 'Metas del mes';
+  document.getElementById('btn-cancelar-meta').style.display = 'none';
+}
+
+async function deleteMeta(id){
+  metasMensuales = metasMensuales.filter(m=>m.id!==id);
+  await saveMetas();
+  renderMetas();
+  showToast('Metas eliminadas.');
+}
+
+document.getElementById('form-metas').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const meta = {
+    id: editingMetaId || uid(),
+    anio: +document.getElementById('m-anio').value,
+    mes: document.getElementById('m-mes').value,
+    tituloActual: document.getElementById('m-titulo-actual').value,
+    tituloMeta: document.getElementById('m-titulo-meta').value,
+    porque: document.getElementById('m-porque').value,
+    tiempo: document.getElementById('m-tiempo').value,
+    volumen: document.getElementById('m-volumen').value,
+    clientes: document.getElementById('m-clientes').value,
+    distribuidores: document.getElementById('m-distribuidores').value,
+    otros: document.getElementById('m-otros').value,
+    flujo: document.getElementById('m-flujo').value,
+    canal: document.getElementById('m-canal').value,
+    red: document.getElementById('m-red').value,
+    acciones: document.getElementById('m-acciones').value,
+  };
+  if(editingMetaId){
+    const idx = metasMensuales.findIndex(m=>m.id===editingMetaId);
+    metasMensuales[idx] = meta;
+  } else {
+    const existing = metasMensuales.findIndex(m=>m.anio===meta.anio && m.mes===meta.mes);
+    if(existing>=0){ meta.id = metasMensuales[existing].id; metasMensuales[existing] = meta; }
+    else metasMensuales.push(meta);
+  }
+  await saveMetas();
+  renderMetas();
+  resetFormMetas();
+  showToast('Metas guardadas.');
+});
+document.getElementById('btn-cancelar-meta').addEventListener('click', resetFormMetas);
+
+// ============ NAVEGACIÓN DE PESTAÑAS ============
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    if(btn.dataset.view==='semanal') renderSemanal();
+    if(btn.dataset.view==='anual') renderAnual();
+  });
+});
+
+// ============ INIT ============
+(async function init(){
+  document.getElementById('f-fecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('m-anio').value = new Date().getFullYear();
+  await loadAll();
+  refreshSelectors();
+  renderRegistro();
+  renderMetas();
+  updateRing();
+})();
+</script>
 </body>
 </html>
